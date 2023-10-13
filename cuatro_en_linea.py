@@ -131,13 +131,13 @@ def obtener_ganador(tablero: List[List[str]]) -> str:
             if "XXXX" in cadena_1 : return "X"
             if "OOOO" in cadena_1 : return "O"
             for n in range(4) :
-                #condiciones necesarias para empesar a concatenar los valores en horizontal
+                #condiciones necesarias para la horizontal
                 if fil < (len(tablero) - 3 ) :
                     cadena_2 += tablero[fil + n][col] 
-                #condiciones necesarias para empesar a concatenar los valores en la diagonal
+                #condiciones necesarias para la diagonal
                 if col < (len(tablero[0]) - 3) and fil < (len(tablero) - 3 ) :
                     diagonal_1 += tablero[n + fil][n + col]
-                #condiciones necesarias para empesar a concatenar los valores en la diagonal inversa
+                #condiciones necesarias para la diagonal inversa
                 if col > 2 and fil < (len(tablero) - 3 ) :
                     diagonal_2 += tablero[n + fil][col - n]
                 if "XXXX" in diagonal_1 or "XXXX" in diagonal_2 : return "X"
