@@ -35,8 +35,6 @@ def crear_tablero(n_filas: int, n_columnas: int) -> List[List[str]]:
         tablero.append(fila)
     return tablero
 
-
-
 def es_turno_de_x(tablero: List[List[str]]) -> bool:
     """Dado un tablero, devuelve True si el próximo turno es de X. Si, en caso
     contrario, es el turno de O, devuelve False.
@@ -53,13 +51,13 @@ def es_turno_de_x(tablero: List[List[str]]) -> bool:
         - el parámetro `tablero` fue inicializado con la función `crear_tablero`
         - los símbolos del tablero fueron insertados previamente insertados con
           la función `insertar_simbolo`"""
+    
     contador = 0
     for f in range(len(tablero)):
         for c in range(len(tablero[f])) :
             if tablero[f][c] != " " : contador += 1
     if  contador%2 == 0 : return True
     return False
-
 
 def insertar_simbolo(tablero: List[List[str]], columna: int) -> bool:
     """Dado un tablero y un índice de columna, se intenta colocar el símbolo del
@@ -75,21 +73,15 @@ def insertar_simbolo(tablero: List[List[str]], columna: int) -> bool:
         - si la función devolvió `True`, se modificó el contenido del parámetro
           `tablero`. Caso contrario, el parámetro `tablero` no se vio modificado
     """
-
     if not(-1< columna < len(tablero[0])):return False
-    tablero.reverse()
+    n = len(tablero) - 1
     for i in range(len(tablero)) :
-        if tablero[i][columna] == " " : 
+        if tablero[n - i][columna] == " " : 
             if es_turno_de_x(tablero) :
-                #print()
-                tablero[i][columna] = "X"
+                tablero[n - i][columna] = "X"
             else:
-                tablero[i][columna] = "O"
-            tablero.reverse()
-            #print(tablero)
-            #return print("True3")
+                tablero[n - i][columna] = "O"
             return True
-    tablero.reverse()
     return False
 
 
@@ -104,8 +96,7 @@ def tablero_completo(tablero: List[List[str]]) -> bool:
     for f in range(len(tablero)):
         for c in range(len(tablero[f])) :
             if tablero[f][c] == " " : return False
-    return True 
-
+    return True
 
 def obtener_ganador(tablero: List[List[str]]) -> str:
     """Dado un tablero, devuelve el símbolo que ganó el juego.
@@ -130,38 +121,31 @@ def obtener_ganador(tablero: List[List[str]]) -> str:
             [' ', 'O', 'O', 'X', 'X', 'X', 'O'],
         ]
     """
-   
-    cadena = ""
-    for f in range(len(tablero)) :
-        for c in range(len(tablero[f])) :
-            cadena += tablero[f][c]
-            if "XXXX" in cadena : return "X"
-            if "OOOO" in cadena : return "O"
-        cadena = ""
-    for c in range(len(tablero[0])) :
-        for f in range(len(tablero)) :
-            cadena += tablero[f][c] 
-            if "XXXX" in cadena : return "X"
-            if "OOOO" in cadena : return "O"
-        cadena = ""
+    cadena_1 = ""
     cadena_2 = ""
-    for f in range(len(tablero)) :
-        for c in range(len(tablero[f]) - f) :
-            cadena += tablero[c][c + f]
-            cadena_2 += tablero[c][-1 - f - c]
-            if "XXXX" in cadena or "XXXX" in cadena_2: return "X"
-            if "OOOO" in cadena or "OOOO" in cadena_2 : return "O"
-        cadena = ""
-        cadena_2 = ""
-    #creo otro tablero para no tener que mutar el original
-    tablero_2 = tablero
-    tablero_2.reverse()
-    for f in range(len(tablero_2)) :
-        for c in range(len(tablero_2[f]) - f) :
-            cadena += tablero_2[c][c + f]
-            cadena_2 += tablero_2[c][-1 - f - c]
-            if "XXXX" in cadena or "XXXX" in cadena_2: return "X"
-            if "OOOO" in cadena or "OOOO" in cadena_2 : return "O"
-        cadena = ""
-        cadena_2 = ""
+    diagonal_1 = ""
+    diagonal_2 = ""
+    for fil in range(len(tablero)):
+        for col in range(len(tablero[fil])) : 
+            cadena_1 += tablero[fil][col]
+            if "XXXX" in cadena_1 : return "X"
+            if "OOOO" in cadena_1 : return "O"
+            for n in range(4) :
+                #condiciones necesarias para empesar a concatenar los valores en horizontal
+                if fil < (len(tablero) - 3 ) :
+                    cadena_2 += tablero[fil + n][col] 
+                #condiciones necesarias para empesar a concatenar los valores en la diagonal
+                if col < (len(tablero[0]) - 3) and fil < (len(tablero) - 3 ) :
+                    diagonal_1 += tablero[n + fil][n + col]
+                #condiciones necesarias para empesar a concatenar los valores en la diagonal inversa
+                if col > 2 and fil < (len(tablero) - 3 ) :
+                    diagonal_2 += tablero[n + fil][col - n]
+                if "XXXX" in diagonal_1 or "XXXX" in diagonal_2 : return "X"
+                if "OOOO" in diagonal_1 or "OOOO" in diagonal_2 : return "O"
+                if "XXXX" in cadena_2 : return "X"
+                if "OOOO" in cadena_2 : return "O"
+            diagonal_1 = ""
+            diagonal_2 = ""
+            cadena_2 = ""
+        cadena_1 = ""
     return " "

@@ -63,7 +63,7 @@ def test_01_representacion_simple():
     ]
     tablero = cuatro_en_linea.crear_tablero(6, 6)
     validar_estado(desc, tablero)
-#test_01_representacion_simple()
+
 
 def test_02_representacion_rectangular():
     """Crea un nuevo juego básico de cuatro en línea de dimensiones 5x7"""
